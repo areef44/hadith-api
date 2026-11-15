@@ -6,6 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import java.io.Serializable;
 
 @Entity
@@ -18,33 +21,43 @@ public class Hadith implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Source ID Wajib Diisi")
     @Column(name = "source_id", nullable = false)
     private Long sourceId;
 
+    @NotNull(message = "Chapter ID Wajib Diisi") 
     @Column(name = "chapter_id", nullable = true)
     private Long chapterId;
 
+    @NotNull(message = "Category ID Wajib Diisi")
     @Column(name = "category_id", nullable = true)
     private Long categoryId;
 
+    @NotNull (message = "Hadith Status ID Wajib Diisi")
     @Column(name = "status_id", nullable = false)
     private Long hadithStatusId;
 
+    @NotNull (message = "Verification Status ID Wajib Diisi")
     @Column(name = "verification_status_id", nullable = false)
     private Long verificationStatusId;
 
+    @NotNull (message = "Grade ID Wajib Diisi")
     @Column(name = "grade_id", nullable = false)
     private Long gradeId;
 
+    @NotNull (message = "Input By Wajib Diisi")
     @Column(name = "input_by", nullable = false)
     private Long inputBy;
 
+    @NotNull (message = "No Hadith Wajib Diisi")
     @Column(name = "no_hadith", nullable = false)
     private Long noHadith;
 
+    @NotEmpty (message = "Arabic Text Wajib Diisi")
     @Column(name = "arabic_text", columnDefinition = "TEXT", nullable = false)
     private String arabicText;
 
+    @NotEmpty (message = "Translation Wajib Diisi")
     @Column(name = "translation", columnDefinition = "TEXT", nullable = false)
     private String translation;
 
