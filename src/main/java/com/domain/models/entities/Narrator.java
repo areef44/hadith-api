@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,6 +22,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "tbl_narrators")   // BUKAN tbl_hadith_narrators
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Narrator implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -61,6 +65,7 @@ public class Narrator implements Serializable {
     private MasterGroup group;
 
     // sisi inverse (tidak membuat kolom/tabel baru)
+    @JsonIgnore
     @ManyToMany(mappedBy = "narrators", fetch = FetchType.LAZY)
     private Set<Hadith> hadiths = new HashSet<>();
 

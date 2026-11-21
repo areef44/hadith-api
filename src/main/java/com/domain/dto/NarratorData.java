@@ -1,6 +1,7 @@
 package com.domain.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public class NarratorData {
     
@@ -26,6 +27,7 @@ public class NarratorData {
     
     private Boolean isActive = true;
 
+    @NotNull(message = "Group ID wajib diisi")
     private Long groupId;
 
     public Long getId() {

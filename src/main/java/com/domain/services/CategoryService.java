@@ -1,17 +1,18 @@
 package com.domain.services;
 
-import jakarta.transaction.TransactionScoped;
+import jakarta.transaction.Transactional;
 
 import com.domain.models.entities.Category;
 import com.domain.models.repos.CategoryRepo;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service 
-@TransactionScoped 
+@Transactional 
 public class CategoryService {
 
     @Autowired 
@@ -31,6 +32,10 @@ public class CategoryService {
 
     public Iterable<Category> findAll(){
         return categoryRepo.findAll();
+    }
+
+    public List<Category> findByGroupId(Long groupId) {
+        return categoryRepo.findByGroupId(groupId);
     }
 
     public void removeOne(Long id){

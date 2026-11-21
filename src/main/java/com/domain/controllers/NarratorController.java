@@ -1,11 +1,11 @@
 package com.domain.controllers;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.domain.dto.NarratorData;
 import com.domain.dto.ResponseData;
+import com.domain.models.entities.MasterGroup;
 import com.domain.models.entities.Narrator;
+import com.domain.services.MasterGroupService;
 import com.domain.services.NarratorService;
 
 import jakarta.validation.Valid;
@@ -29,7 +31,7 @@ public class NarratorController {
     private NarratorService narratorService;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private MasterGroupService masterGroupService;
 
     @PostMapping
     public ResponseEntity<ResponseData<Narrator>> create(@Valid @RequestBody NarratorData narratorData, Errors errors) {
@@ -43,11 +45,18 @@ public class NarratorController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
 
-        Narrator narrator = modelMapper.map(narratorData, Narrator.class);
+        MasterGroup group = masterGroupService.findOne(narratorData.getGroupId());
+        if (group == null) {
+            responseData.getMessages().add("Master Group dengan ID " + narratorData.getGroupId() + " tidak ditemukan");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        Narrator narrator = mapToEntity(narratorData, group);
         responseData.setStatus(true);
         responseData.setPayload(narratorService.save(narrator));
         return ResponseEntity.ok(responseData);
-
     }
 
     @GetMapping
@@ -72,9 +81,45 @@ public class NarratorController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
 
-        Narrator narrator = modelMapper.map(narratorData, Narrator.class);
+        if (narratorData.getId() == null) {
+            responseData.getMessages().add("Id Wajib Diisi");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        MasterGroup group = masterGroupService.findOne(narratorData.getGroupId());
+        if (group == null) {
+            responseData.getMessages().add("Master Group dengan ID " + narratorData.getGroupId() + " tidak ditemukan");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        Narrator narrator = mapToEntity(narratorData, group);
+        narrator.setId(narratorData.getId());
         responseData.setStatus(true);
         responseData.setPayload(narratorService.save(narrator));
         return ResponseEntity.ok(responseData);
+    }
+
+    @DeleteMapping("/{id}")
+    public void removeOne(@PathVariable("id") Long id) {
+        narratorService.removeOne(id);
+    }
+
+    private Narrator mapToEntity(NarratorData dto, MasterGroup group) {
+        Narrator narrator = new Narrator();
+        narrator.setName(dto.getName());
+        narrator.setArabicName(dto.getArabicName());
+        narrator.setFullName(dto.getFullName());
+        narrator.setKunyah(dto.getKunyah());
+        narrator.setBirthYear(dto.getBirthYear());
+        narrator.setDeathYear(dto.getDeathYear());
+        narrator.setBirthPlace(dto.getBirthPlace());
+        narrator.setBiography(dto.getBiography());
+        narrator.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
+        narrator.setGroup(group);
+        return narrator;
     }
 }

@@ -1,5 +1,7 @@
 package com.domain.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,6 +21,7 @@ import jakarta.persistence.UniqueConstraint;
         columnNames = {"group_id", "code"}
     )
 )
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class MasterData {
 
     @Id

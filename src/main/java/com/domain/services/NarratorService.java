@@ -1,5 +1,6 @@
 package com.domain.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,10 @@ public class NarratorService {
 
     public Iterable<Narrator> findAll(){
         return narratorRepo.findAll();
+    }
+
+    public List<Narrator> findByGroupId(Long groupId) {
+        return narratorRepo.findByGroupId(groupId);
     }
 
     public void removeOne(Long id){

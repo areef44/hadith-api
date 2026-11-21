@@ -1,6 +1,7 @@
 package com.domain.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public class CategoryData {
 
@@ -11,6 +12,9 @@ public class CategoryData {
 
     @NotEmpty(message = "Deskripsi kategori wajib diisi")
     private String description;
+
+    @NotNull(message = "Group ID wajib diisi")
+    private Long groupId;
 
     public Long getId() {
         return id;
@@ -36,6 +40,12 @@ public class CategoryData {
         this.description = description;
     }
 
-   
-    
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
 }

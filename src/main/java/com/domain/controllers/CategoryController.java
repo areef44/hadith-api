@@ -1,6 +1,5 @@
 package com.domain.controllers;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.validation.Errors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.domain.dto.CategoryData;
 import com.domain.dto.ResponseData;
 import com.domain.models.entities.Category;
+import com.domain.models.entities.MasterGroup;
 import com.domain.services.CategoryService;
+import com.domain.services.MasterGroupService;
 
 import jakarta.validation.Valid;
 
@@ -29,7 +30,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private MasterGroupService masterGroupService;
 
     @PostMapping
     public ResponseEntity<ResponseData<Category>> create(@Valid @RequestBody CategoryData categoryData, Errors errors) {
@@ -44,7 +45,19 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
 
-        Category category = modelMapper.map(categoryData, Category.class);
+        MasterGroup group = masterGroupService.findOne(categoryData.getGroupId());
+        if (group == null) {
+            responseData.getMessages().add("Master Group dengan ID " + categoryData.getGroupId() + " tidak ditemukan");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        Category category = new Category();
+        category.setName(categoryData.getName());
+        category.setDescription(categoryData.getDescription());
+        category.setGroup(group);
+
         responseData.setStatus(true);
         responseData.setPayload(categoryService.save(category));
         return ResponseEntity.ok(responseData);
@@ -80,7 +93,20 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
 
-        Category category = modelMapper.map(categoryData, Category.class);
+        MasterGroup group = masterGroupService.findOne(categoryData.getGroupId());
+        if (group == null) {
+            responseData.getMessages().add("Master Group dengan ID " + categoryData.getGroupId() + " tidak ditemukan");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        Category category = new Category();
+        category.setId(categoryData.getId());
+        category.setName(categoryData.getName());
+        category.setDescription(categoryData.getDescription());
+        category.setGroup(group);
+
         responseData.setStatus(true);
         responseData.setPayload(categoryService.save(category));
         return ResponseEntity.ok(responseData);
