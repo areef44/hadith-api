@@ -1,5 +1,7 @@
 package com.domain.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,6 +22,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tbl_hadith")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Hadith implements Serializable {
 
     private static final long serialVersionUID = 1L;
