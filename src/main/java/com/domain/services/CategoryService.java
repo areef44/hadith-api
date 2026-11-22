@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service 
@@ -34,11 +35,15 @@ public class CategoryService {
         return categoryRepo.findAll();
     }
 
-    public List<Category> findByGroupId(Long groupId) {
-        return categoryRepo.findByGroupId(groupId);
-    }
-
     public void removeOne(Long id){
         categoryRepo.deleteById(id);
+    }
+
+    public Iterable<Category> findByName(String name, Pageable pageable){
+        return categoryRepo.findByNameContains(name, pageable);
+    }
+
+    public Iterable<Category> saveBatch(Iterable<Category> categories){
+        return categoryRepo.saveAll(categories);
     }
 }
