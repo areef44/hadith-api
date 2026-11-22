@@ -33,11 +33,23 @@ public class NarratorService {
         return narratorRepo.findAll();
     }
 
-    public List<Narrator> findByGroupId(Long groupId) {
-        return narratorRepo.findByGroupId(groupId);
-    }
-
     public void removeOne(Long id){
         narratorRepo.deleteById(id);
+    }
+
+    public Narrator findByName(String name){
+        return narratorRepo.findByName(name);
+    }
+
+    public List<Narrator> findByFullName(String fullName){
+        return narratorRepo.findByFullNameContainsOrderByIdDesc(fullName);
+    }
+
+    public List<Narrator> findByFullNameStartsWith(String prefix){
+        return narratorRepo.findByFullNameStartsWith(prefix);
+    } 
+
+    public List<Narrator> findByNameOrFullName(String name, String fullName){
+        return narratorRepo.findByNameContainsOrFullNameContains(name, fullName);
     }
 }

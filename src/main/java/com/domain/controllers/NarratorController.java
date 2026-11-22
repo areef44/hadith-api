@@ -1,5 +1,7 @@
 package com.domain.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.domain.dto.NarratorData;
 import com.domain.dto.ResponseData;
+import com.domain.dto.SearchData;
 import com.domain.models.entities.MasterGroup;
 import com.domain.models.entities.Narrator;
 import com.domain.services.MasterGroupService;
@@ -121,5 +124,25 @@ public class NarratorController {
         narrator.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
         narrator.setGroup(group);
         return narrator;
+    }
+
+    @PostMapping("/search/by-name")
+    public Narrator findByName(@RequestBody SearchData searchData) {
+        return narratorService.findByName(searchData.getSearchKey());
+    }
+
+    @PostMapping("/search/fullname")
+    public List<Narrator> findByFullName(@RequestBody SearchData searchData) {
+        return narratorService.findByFullName(searchData.getSearchKey());
+    }
+
+    @PostMapping("/search/fullname-start-with")
+    public List<Narrator> findByFullNameStartWith(@RequestBody SearchData searchData) {
+        return narratorService.findByFullNameStartsWith(searchData.getSearchKey());
+    }
+
+    @PostMapping("/search/nameorfullname")
+    public List<Narrator> findByNameOrFullName(@RequestBody SearchData searchData) {
+        return narratorService.findByNameOrFullName(searchData.getSearchKey(), searchData.getOtherSearchKey());
     }
 }
