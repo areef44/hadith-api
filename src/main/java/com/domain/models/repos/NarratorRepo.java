@@ -14,4 +14,6 @@ public interface NarratorRepo extends CrudRepository<Narrator, Long> {
     List<Narrator> findByFullNameStartsWith(String fullName);
 
     List<Narrator> findByNameContainsOrFullNameContains(String name, String fullName);
+
+    List<Narrator> findByGroupId(Long groupId);
 }
